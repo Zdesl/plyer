@@ -179,6 +179,11 @@ class AndroidNotification(Notification):
         noti.setContentText(AndroidString(message))
         noti.setTicker(AndroidString(ticker))
 
+        # test
+        if kwargs.get('chronometer'):
+            Boolean = autoclass('java.lang.Boolean')
+            noti.setUsesChronometer(Boolean('true'))
+
         # set additional flags for notification
         self._set_icons(noti, icon=icon)
         self._set_open_behavior(noti)

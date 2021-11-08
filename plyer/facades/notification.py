@@ -46,7 +46,7 @@ class Notification:
     '''
 
     def notify(self, title='', message='', app_name='', app_icon='',
-               timeout=10, ticker='', toast=False):
+               timeout=10, ticker='', toast=False, chronometer=False):
         '''
         Send a notification.
 
@@ -55,8 +55,7 @@ class Notification:
         :param app_name: Name of the app launching this notification
         :param app_icon: Icon to be displayed along with the message
         :param timeout: time to display the message for, defaults to 10
-        :param ticker: text to display on status bar as the notification
-                       arrives
+        :param ticker: Set the "ticker" text which is sent to accessibility services.
         :param toast: simple Android message instead of full notification
         :type title: str
         :type message: str
@@ -79,7 +78,8 @@ class Notification:
         self._notify(
             title=title, message=message,
             app_icon=app_icon, app_name=app_name,
-            timeout=timeout, ticker=ticker, toast=toast
+            timeout=timeout, ticker=ticker, toast=toast,
+            chronometer=chronometer
         )
 
     # private
