@@ -185,7 +185,7 @@ class AndroidNotification(Notification):
 
             # Timestamp = autoclass('java.sql.Timestamp')
             from datetime import datetime
-            timestamp = int(round(datetime.now().timestamp()))
+            timestamp = int(round(datetime.now().timestamp()))*1000 # TODO fix this (multiply by 1000 or not?)
             noti.setWhen(timestamp)
             noti.setUsesChronometer(True) # TypeError: an integer is required??
 
