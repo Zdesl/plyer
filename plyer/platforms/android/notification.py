@@ -187,7 +187,7 @@ class AndroidNotification(Notification):
             from datetime import datetime
             timestamp = int(round(datetime.now().timestamp()))
             noti.setWhen(timestamp)
-            noti.setUsesChronometer(Boolean('true'))
+            noti.setUsesChronometer(True) # TypeError: an integer is required??
 
         # set additional flags for notification
         self._set_icons(noti, icon=icon)
