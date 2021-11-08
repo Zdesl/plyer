@@ -64,6 +64,7 @@ class Notification:
         :type timeout: int
         :type ticker: str
         :type toast: bool
+        :type chronometer: bool
 
         .. note::
            When called on Windows, ``app_icon`` has to be a path to
