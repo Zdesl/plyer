@@ -180,6 +180,9 @@ class AndroidNotification(Notification):
         noti.setTicker(AndroidString(ticker))
 
         # test
+        if kwargs.get('only_alert_once'):
+            noti.setOnlyAlertOnce(True) 
+
         if kwargs.get('chronometer'):
             Boolean = autoclass('java.lang.Boolean')
 
