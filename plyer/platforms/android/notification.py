@@ -181,7 +181,10 @@ class AndroidNotification(Notification):
 
         # test
         if kwargs.get('only_alert_once'):
-            noti.setOnlyAlertOnce(True) 
+            noti.setOnlyAlertOnce(True)
+        
+        if kwargs.get('ongoing'):
+            noti.setOngoing(True)
 
         if kwargs.get('chronometer'):
             from datetime import datetime

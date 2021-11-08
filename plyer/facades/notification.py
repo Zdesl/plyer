@@ -46,7 +46,7 @@ class Notification:
     '''
 
     def notify(self, title='', message='', app_name='', app_icon='',
-               timeout=10, ticker='', toast=False, chronometer=False,only_alert_once=False):
+               timeout=10, ticker='', toast=False, chronometer=False,only_alert_once=False,ongoing=False):
         '''
         Send a notification.
 
@@ -59,6 +59,7 @@ class Notification:
         :param toast: simple Android message instead of full notification
         :param chronometer: display a timer in the notification
         :param only_alert_once: only play a notification alert when not already showing
+        :param ongoing: notification cannot be dismissed by user
         :type title: str
         :type message: str
         :type app_name: str
@@ -68,6 +69,7 @@ class Notification:
         :type toast: bool
         :type chronometer: bool
         :type only_alert_once: bool
+        :type ongoing: bool
 
         .. note::
            When called on Windows, ``app_icon`` has to be a path to
@@ -83,7 +85,8 @@ class Notification:
             title=title, message=message,
             app_icon=app_icon, app_name=app_name,
             timeout=timeout, ticker=ticker, toast=toast,
-            chronometer=chronometer,only_alert_once=only_alert_once
+            chronometer=chronometer,only_alert_once=only_alert_once,
+            ongoing=ongoing
         )
 
     # private
