@@ -182,6 +182,7 @@ class AndroidNotification(Notification):
         # test
         if kwargs.get('chronometer'):
             Boolean = autoclass('java.lang.Boolean')
+
             # Timestamp = autoclass('java.sql.Timestamp')
             from datetime import datetime
             timestamp = int(round(datetime.now().timestamp()))
