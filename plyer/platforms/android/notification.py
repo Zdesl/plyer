@@ -186,7 +186,6 @@ class AndroidNotification(Notification):
             ms_since_1970 = Timestamp.getTime()
             noti.setWhen(ms_since_1970)
             noti.setUsesChronometer(Boolean('true'))
-            noti.setWhen()
 
         # set additional flags for notification
         self._set_icons(noti, icon=icon)
