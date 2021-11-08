@@ -181,8 +181,8 @@ class AndroidNotification(Notification):
 
         # test
         if kwargs.get('chronometer'):
-            Boolean = autoclass('java.lang.Boolean')
-            noti.setUsesChronometer(Boolean('true'))
+            # Boolean = autoclass('java.lang.Boolean')
+            noti.setUsesChronometer(1)
 
         # set additional flags for notification
         self._set_icons(noti, icon=icon)
