@@ -57,6 +57,7 @@ class Notification:
         :param timeout: time to display the message for, defaults to 10
         :param ticker: Set the "ticker" text which is sent to accessibility services.
         :param toast: simple Android message instead of full notification
+        :param chronometer: display a timer in the notification
         :type title: str
         :type message: str
         :type app_name: str
