@@ -51,7 +51,7 @@ class AndroidNotification(Notification):
             ))
         return self._ns
 
-    def _build_notification_channel(self, name):
+    def _build_notification_channel(self, name, importance):
         '''
         Create a NotificationChannel using channel id of the application
         package name (com.xyz, org.xyz, ...) and channel name same as the
@@ -66,9 +66,27 @@ class AndroidNotification(Notification):
 
         channel = autoclass('android.app.NotificationChannel')
 
-        app_channel = channel(
-            self._channel_id, name, NotificationManager.IMPORTANCE_DEFAULT
-        )
+        # https://developer.android.com/training/notify-user/channels#importance
+        if importance == 'urgent':
+            app_channel = channel(
+                self._channel_id, name, NotificationManager.IMPORTANCE_HIGH
+            )
+        elif importance == 'high':
+            app_channel = channel(
+                self._channel_id, name, NotificationManager.IMPORTANCE_DEFAULT
+            )
+        elif importance == 'medium':
+            app_channel = channel(
+                self._channel_id, name, NotificationManager.IMPORTANCE_LOW
+            )
+        elif importance == 'low':
+            app_channel = channel(
+                self._channel_id, name, NotificationManager.IMPORTANCE_MIN
+            )
+        else:
+            app_channel = channel(
+                self._channel_id, name, NotificationManager.IMPORTANCE_DEFAULT
+            )
         self._get_notification_service().createNotificationChannel(
             app_channel
         )
@@ -114,14 +132,14 @@ class AndroidNotification(Notification):
             )
             notification.setLargeIcon(bitmap_icon)
 
-    def _build_notification(self, title):
+    def _build_notification(self, title, importance):
         '''
         .. versionadded:: 1.4.0
         '''
         if SDK_INT < 26:
             noti = NotificationBuilder(activity)
         else:
-            self._channel = self._build_notification_channel(title)
+            self._channel = self._build_notification_channel(title, importance)
             noti = NotificationBuilder(activity, self._channel_id)
         return noti
 
@@ -172,17 +190,18 @@ class AndroidNotification(Notification):
             self._toast(message)
             return
         else:
-            noti = self._build_notification(title)
+            importance = kwargs.get('importance')
+            noti = self._build_notification(title, importance)
 
         # set basic properties for notification
         noti.setContentTitle(title)
         noti.setContentText(AndroidString(message))
         noti.setTicker(AndroidString(ticker))
 
-        # test
+        # TODO add setFullScreenIntent
         if kwargs.get('only_alert_once'):
             noti.setOnlyAlertOnce(True)
-        
+
         if kwargs.get('ongoing'):
             noti.setOngoing(True)
 
