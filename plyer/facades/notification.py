@@ -87,8 +87,8 @@ class Notification:
         self._notify(
             title=title, message=message,
             app_icon=app_icon, app_name=app_name,
-            timeout=timeout, ticker=ticker, toast=toast,
-            chronometer=chronometer,only_alert_once=only_alert_once,
+            importance=importance, timeout=timeout, ticker=ticker,
+            toast=toast, chronometer=chronometer,only_alert_once=only_alert_once,
             ongoing=ongoing
         )
 

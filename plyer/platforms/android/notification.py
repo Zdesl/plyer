@@ -80,6 +80,7 @@ class AndroidNotification(Notification):
                 self._channel_id, name, NotificationManager.IMPORTANCE_LOW
             )
         elif importance == 'low':
+            # Low No sound and does not appear in the status bar but still visible in noti drawer
             app_channel = channel(
                 self._channel_id, name, NotificationManager.IMPORTANCE_MIN
             )
