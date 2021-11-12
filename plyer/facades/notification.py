@@ -54,8 +54,7 @@ class Notification:
         :param message: Message of the notification
         :param app_name: Name of the app launching this notification
         :param app_icon: Icon to be displayed along with the message
-        :param importance: Can be one of the following: urgent,high,medium,low,default
-                           determines whether the notification has sound or not
+        :param importance: Can be one of the following: urgent,high,medium,low,default determines whether the notification has sound or not
         :param timeout: time to display the message for, defaults to 10
         :param ticker: Set the "ticker" text which is sent to accessibility services.
         :param toast: simple Android message instead of full notification

@@ -65,7 +65,7 @@ class AndroidNotification(Notification):
             return
 
         channel = autoclass('android.app.NotificationChannel')
-
+        print("TESTCHANNELID:",self._channel_id)
         # https://developer.android.com/training/notify-user/channels#importance
         if importance == 'urgent':
             app_channel = channel(
