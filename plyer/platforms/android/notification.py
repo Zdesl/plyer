@@ -26,7 +26,8 @@ AndroidString = autoclass('java.lang.String')
 Context = autoclass('android.content.Context')
 NotificationBuilder = autoclass('android.app.Notification$Builder')
 NotificationManager = autoclass('android.app.NotificationManager')
-Drawable = autoclass("{}.R$mipmap".format(activity.getPackageName()))
+# NotificationManagerCompat = autoclass('android.app.NotificationManagerCompat')
+Drawable = autoclass(f"{activity.getPackageName()}.R$mipmap")
 PendingIntent = autoclass('android.app.PendingIntent')
 Intent = autoclass('android.content.Intent')
 Toast = autoclass('android.widget.Toast')
@@ -42,7 +43,8 @@ class AndroidNotification(Notification):
 
     def __init__(self):
         self._ns = None
-        self._channel_id = activity.getPackageName()
+        # self._channel_id = activity.getPackageName()
+        self._channel_id = "org.drados.sensorapp"
 
     def _get_notification_service(self):
         if not self._ns:
@@ -65,7 +67,6 @@ class AndroidNotification(Notification):
             return
 
         channel = autoclass('android.app.NotificationChannel')
-        print("TESTCHANNELID:",self._channel_id)
         # https://developer.android.com/training/notify-user/channels#importance
         if importance == 'urgent':
             app_channel = channel(
