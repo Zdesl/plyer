@@ -146,7 +146,7 @@ class AndroidNotification(Notification):
         return noti
 
     @staticmethod
-    def _set_open_behavior(notification):
+    def _set_open_behavior(notification, remove_when_clicked):
         '''
         Open the source application when user opens the notification.
 
@@ -168,7 +168,8 @@ class AndroidNotification(Notification):
         )
 
         notification.setContentIntent(pending_intent)
-        notification.setAutoCancel(True)
+        if remove_when_clicked:
+            notification.setAutoCancel(True)
 
     def _open_notification(self, notification):
         if SDK_INT >= 16:
@@ -179,7 +180,6 @@ class AndroidNotification(Notification):
         self._get_notification_service().notify(0, notification)
 
     def _notify(self, **kwargs):
-        try:
             noti = None
             message = kwargs.get('message').encode('utf-8')
             ticker = kwargs.get('ticker').encode('utf-8')
@@ -213,16 +213,17 @@ class AndroidNotification(Notification):
                 timestamp = (int(round(datetime.now().timestamp()))*1000)
                 noti.setWhen(timestamp)
                 noti.setUsesChronometer(True)
-
+            if kwargs.get('remove_when_clicked'):
+                remove_when_clicked = True
+            else:
+                remove_when_clicked = False
+                
             # set additional flags for notification
             self._set_icons(noti, icon=icon)
-            self._set_open_behavior(noti)
+            self._set_open_behavior(noti, remove_when_clicked)
 
             # launch
             self._open_notification(noti)
-        except Exception as e:
-            print("Exception:", e)
-            raise Exception(e)
 
 
 def instance():
