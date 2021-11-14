@@ -43,15 +43,17 @@ class AndroidNotification(Notification):
 
     def __init__(self):
         self._ns = None
-        # self._channel_id = activity.getPackageName()
-        self._channel_id = "org.drados.sensorapp"
+        self._channel_id = activity.getPackageName()
 
     def _get_notification_service(self):
-        if not self._ns:
-            self._ns = cast(NotificationManager, activity.getSystemService(
-                Context.NOTIFICATION_SERVICE
-            ))
-        return self._ns
+        try:
+            if not self._ns:
+                self._ns = cast(NotificationManager, activity.getSystemService(
+                    Context.NOTIFICATION_SERVICE
+                ))
+            return self._ns
+        except Exception:
+            raise
 
     def _build_notification_channel(self, name, importance):
         '''
@@ -62,37 +64,39 @@ class AndroidNotification(Notification):
 
         .. versionadded:: 1.4.0
         '''
+        try:
+            if SDK_INT < 26:
+                return
 
-        if SDK_INT < 26:
-            return
-
-        channel = autoclass('android.app.NotificationChannel')
-        # https://developer.android.com/training/notify-user/channels#importance
-        if importance == 'urgent':
-            app_channel = channel(
-                self._channel_id, name, NotificationManager.IMPORTANCE_HIGH
+            channel = autoclass('android.app.NotificationChannel')
+            # https://developer.android.com/training/notify-user/channels#importance
+            if importance == 'urgent':
+                app_channel = channel(
+                    self._channel_id, name, NotificationManager.IMPORTANCE_HIGH
+                )
+            elif importance == 'high':
+                app_channel = channel(
+                    self._channel_id, name, NotificationManager.IMPORTANCE_DEFAULT
+                )
+            elif importance == 'medium':
+                app_channel = channel(
+                    self._channel_id, name, NotificationManager.IMPORTANCE_LOW
+                )
+            elif importance == 'low':
+                # Low No sound and does not appear in the status bar but still visible in noti drawer
+                app_channel = channel(
+                    self._channel_id, name, NotificationManager.IMPORTANCE_MIN
+                )
+            else:
+                app_channel = channel(
+                    self._channel_id, name, NotificationManager.IMPORTANCE_DEFAULT
+                )
+            self._get_notification_service().createNotificationChannel(
+                app_channel
             )
-        elif importance == 'high':
-            app_channel = channel(
-                self._channel_id, name, NotificationManager.IMPORTANCE_DEFAULT
-            )
-        elif importance == 'medium':
-            app_channel = channel(
-                self._channel_id, name, NotificationManager.IMPORTANCE_LOW
-            )
-        elif importance == 'low':
-            # Low No sound and does not appear in the status bar but still visible in noti drawer
-            app_channel = channel(
-                self._channel_id, name, NotificationManager.IMPORTANCE_MIN
-            )
-        else:
-            app_channel = channel(
-                self._channel_id, name, NotificationManager.IMPORTANCE_DEFAULT
-            )
-        self._get_notification_service().createNotificationChannel(
-            app_channel
-        )
-        return app_channel
+            return app_channel
+        except Exception:
+            raise
 
     @run_on_ui_thread
     def _toast(self, message):
@@ -117,33 +121,39 @@ class AndroidNotification(Notification):
 
         .. versionadded:: 1.4.0
         '''
-        app_icon = Drawable.icon
-        notification.setSmallIcon(app_icon)
+        try:
+            app_icon = Drawable.icon
+            notification.setSmallIcon(app_icon)
 
-        bitmap_icon = app_icon
-        if icon is not None:
-            bitmap_icon = BitmapFactory.decodeFile(icon)
-            notification.setLargeIcon(bitmap_icon)
-        elif icon == '':
-            # we don't want the big icon set,
-            # only the small one in the top panel
-            pass
-        else:
-            bitmap_icon = BitmapFactory.decodeResource(
-                python_act.getResources(), app_icon
-            )
-            notification.setLargeIcon(bitmap_icon)
+            bitmap_icon = app_icon
+            if icon is not None:
+                bitmap_icon = BitmapFactory.decodeFile(icon)
+                notification.setLargeIcon(bitmap_icon)
+            elif icon == '':
+                # we don't want the big icon set,
+                # only the small one in the top panel
+                pass
+            else:
+                bitmap_icon = BitmapFactory.decodeResource(
+                    python_act.getResources(), app_icon
+                )
+                notification.setLargeIcon(bitmap_icon)
+        except Exception:
+            raise 
 
     def _build_notification(self, title, importance):
         '''
         .. versionadded:: 1.4.0
         '''
-        if SDK_INT < 26:
-            noti = NotificationBuilder(activity)
-        else:
-            self._channel = self._build_notification_channel(title, importance)
-            noti = NotificationBuilder(activity, self._channel_id)
-        return noti
+        try:
+            if SDK_INT < 26:
+                noti = NotificationBuilder(activity)
+            else:
+                self._channel = self._build_notification_channel(title, importance)
+                noti = NotificationBuilder(activity, self._channel_id)
+            return noti
+        except Exception:
+            raise
 
     @staticmethod
     def _set_open_behavior(notification, remove_when_clicked):
@@ -152,34 +162,40 @@ class AndroidNotification(Notification):
 
         .. versionadded:: 1.4.0
         '''
+        try:
+            # create Intent that navigates back to the application
+            app_context = activity.getApplication().getApplicationContext()
+            notification_intent = Intent(app_context, python_act)
 
-        # create Intent that navigates back to the application
-        app_context = activity.getApplication().getApplicationContext()
-        notification_intent = Intent(app_context, python_act)
+            # set flags to run our application Activity
+            notification_intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            notification_intent.setAction(Intent.ACTION_MAIN)
+            notification_intent.addCategory(Intent.CATEGORY_LAUNCHER)
 
-        # set flags to run our application Activity
-        notification_intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        notification_intent.setAction(Intent.ACTION_MAIN)
-        notification_intent.addCategory(Intent.CATEGORY_LAUNCHER)
+            # get our application Activity
+            pending_intent = PendingIntent.getActivity(
+                app_context, 0, notification_intent, 0
+            )
 
-        # get our application Activity
-        pending_intent = PendingIntent.getActivity(
-            app_context, 0, notification_intent, 0
-        )
-
-        notification.setContentIntent(pending_intent)
-        if remove_when_clicked:
-            notification.setAutoCancel(True)
+            notification.setContentIntent(pending_intent)
+            if remove_when_clicked:
+                notification.setAutoCancel(True)
+        except Exception as e:
+            raise
 
     def _open_notification(self, notification):
-        if SDK_INT >= 16:
-            notification = notification.build()
-        else:
-            notification = notification.getNotification()
+        try:
+            if SDK_INT >= 16:
+                notification = notification.build()
+            else:
+                notification = notification.getNotification()
 
-        self._get_notification_service().notify(0, notification)
+            self._get_notification_service().notify(0, notification)
+        except Exception:
+            raise
 
     def _notify(self, **kwargs):
+        try:
             noti = None
             message = kwargs.get('message').encode('utf-8')
             ticker = kwargs.get('ticker').encode('utf-8')
@@ -224,6 +240,9 @@ class AndroidNotification(Notification):
 
             # launch
             self._open_notification(noti)
+        except Exception as e:
+            print("Exception:", e)
+            raise Exception(e)
 
 
 def instance():
