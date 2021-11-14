@@ -94,4 +94,4 @@ class Notification:
     # private
 
     def _notify(self, **kwargs):
-        raise NotImplementedError("No usable implementation found!")
+        raise

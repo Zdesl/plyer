@@ -179,46 +179,50 @@ class AndroidNotification(Notification):
         self._get_notification_service().notify(0, notification)
 
     def _notify(self, **kwargs):
-        noti = None
-        message = kwargs.get('message').encode('utf-8')
-        ticker = kwargs.get('ticker').encode('utf-8')
-        title = AndroidString(
-            kwargs.get('title', '').encode('utf-8')
-        )
-        icon = kwargs.get('app_icon')
+        try:
+            noti = None
+            message = kwargs.get('message').encode('utf-8')
+            ticker = kwargs.get('ticker').encode('utf-8')
+            title = AndroidString(
+                kwargs.get('title', '').encode('utf-8')
+            )
+            icon = kwargs.get('app_icon')
 
-        # decide whether toast only or proper notification
-        if kwargs.get('toast'):
-            self._toast(message)
-            return
-        else:
-            importance = kwargs.get('importance')
-            noti = self._build_notification(title, importance)
+            # decide whether toast only or proper notification
+            if kwargs.get('toast'):
+                self._toast(message)
+                return
+            else:
+                importance = kwargs.get('importance')
+                noti = self._build_notification(title, importance)
 
-        # set basic properties for notification
-        noti.setContentTitle(title)
-        noti.setContentText(AndroidString(message))
-        noti.setTicker(AndroidString(ticker))
+            # set basic properties for notification
+            noti.setContentTitle(title)
+            noti.setContentText(AndroidString(message))
+            noti.setTicker(AndroidString(ticker))
 
-        # TODO add setFullScreenIntent
-        if kwargs.get('only_alert_once'):
-            noti.setOnlyAlertOnce(True)
+            # TODO add setFullScreenIntent
+            if kwargs.get('only_alert_once'):
+                noti.setOnlyAlertOnce(True)
 
-        if kwargs.get('ongoing'):
-            noti.setOngoing(True)
+            if kwargs.get('ongoing'):
+                noti.setOngoing(True)
 
-        if kwargs.get('chronometer'):
-            from datetime import datetime
-            timestamp = (int(round(datetime.now().timestamp()))*1000)
-            noti.setWhen(timestamp)
-            noti.setUsesChronometer(True)
+            if kwargs.get('chronometer'):
+                from datetime import datetime
+                timestamp = (int(round(datetime.now().timestamp()))*1000)
+                noti.setWhen(timestamp)
+                noti.setUsesChronometer(True)
 
-        # set additional flags for notification
-        self._set_icons(noti, icon=icon)
-        self._set_open_behavior(noti)
+            # set additional flags for notification
+            self._set_icons(noti, icon=icon)
+            self._set_open_behavior(noti)
 
-        # launch
-        self._open_notification(noti)
+            # launch
+            self._open_notification(noti)
+        except Exception as e:
+            print("Exception:", e)
+            raise Exception(e)
 
 
 def instance():
