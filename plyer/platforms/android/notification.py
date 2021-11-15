@@ -229,14 +229,15 @@ class AndroidNotification(Notification):
                 timestamp = (int(round(datetime.now().timestamp()))*1000)
                 noti.setWhen(timestamp)
                 noti.setUsesChronometer(True)
+
             if kwargs.get('remove_when_clicked'):
                 remove_when_clicked = True
             else:
                 remove_when_clicked = False
                 
             # set additional flags for notification
-            self._set_icons(noti, icon=icon)
-            self._set_open_behavior(noti, remove_when_clicked)
+            # self._set_icons(noti, icon=icon)
+            # self._set_open_behavior(noti, remove_when_clicked)
 
             # launch
             self._open_notification(noti)
