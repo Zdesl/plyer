@@ -12,7 +12,7 @@ except (ImportError, AttributeError):
 
 if 'PYTHON_SERVICE_ARGUMENT' in environ:
     PythonActivity = autoclass(ns + '.PythonActivity')
-    activity = PythonActivity.mActivity
+    activity = PythonActivity
 else:
     PythonActivity = autoclass(ns + '.PythonActivity')
-    activity = PythonActivity.mActivity
+    activity = PythonActivity
