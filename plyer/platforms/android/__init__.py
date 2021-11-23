@@ -11,8 +11,8 @@ except (ImportError, AttributeError):
     ns = 'org.renpy.android'
 
 if 'PYTHON_SERVICE_ARGUMENT' in environ:
-    PythonActivity = autoclass(ns + '.PythonActivity')
-    activity = PythonActivity
+    PythonService = autoclass(ns + '.PythonService')
+    activity = PythonService.mService
 else:
     PythonActivity = autoclass(ns + '.PythonActivity')
-    activity = PythonActivity
+    activity = PythonActivity.mActivity
