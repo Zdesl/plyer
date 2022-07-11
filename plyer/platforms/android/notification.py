@@ -205,8 +205,6 @@ class AndroidNotification(Notification):
             noti.setContentTitle(title)
             noti.setContentText(AndroidString(message))
             noti.setTicker(AndroidString(ticker))
-            if kwargs.get('visibility'):
-                noti.setVisibility(noti.VISIBILITY_PUBLIC)
 
             # TODO add setFullScreenIntent
             if kwargs.get('only_alert_once'):
