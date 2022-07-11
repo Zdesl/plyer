@@ -46,7 +46,7 @@ class Notification:
     '''
 
     def notify(self, title='', message='', app_name='', app_icon='', importance = '',
-               timeout=10, ticker='', toast=False, chronometer=False, only_alert_once=False, ongoing=False, remove_when_clicked=True, hints={}):
+               timeout=10, ticker='', toast=False, chronometer=False, only_alert_once=False, ongoing=False, remove_when_clicked=True, visibility=False, hints={}):
         '''
         Send a notification.
 
@@ -62,6 +62,7 @@ class Notification:
         :param only_alert_once: only play a notification alert when not already showing
         :param ongoing: notification cannot be dismissed by user
         :param remove_when_clicked: remove the notification when clicked in the notification drawer
+        :param visibility: 
         :param hints: Optional hints that can be used to pass along extra
                       instructions on Linux.
                       (See https://specifications.freedesktop.org/notification-spec/latest/ar01s08.html)  # noqa: E501
@@ -78,6 +79,7 @@ class Notification:
         :type only_alert_once: bool
         :type ongoing: bool
         :type remove_when_clicked: bool
+        :type visibility: int
         :type hints: dict
 
         .. note::
@@ -95,7 +97,8 @@ class Notification:
             app_icon=app_icon, app_name=app_name,
             importance=importance, timeout=timeout, ticker=ticker,
             toast=toast, chronometer=chronometer, only_alert_once=only_alert_once,
-            ongoing=ongoing, remove_when_clicked=remove_when_clicked, hints=hints
+            ongoing=ongoing, remove_when_clicked=remove_when_clicked,
+            visibility=visibility, hints=hints
         )
 
     # private
