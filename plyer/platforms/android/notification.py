@@ -59,7 +59,7 @@ class AndroidNotification(Notification):
             ))
         return self._ns
 
-    def _build_notification_channel(self, name, importance):
+    def _build_notification_channel(self, name, importance, visibility):
         '''
         Create a NotificationChannel using channel id of the application
         package name (com.xyz, org.xyz, ...) and channel name same as the
@@ -84,12 +84,12 @@ class AndroidNotification(Notification):
             )
         elif importance == 'medium':
             app_channel = channel(
-                self._channel_id, name, NotificationManager.IMPORTANCE_LOW
+                self._channel_id, name, NotificationManager.IMPORTANCE_LOW, NotificationManager.VISIBILITY_PUBLIC
             )
         elif importance == 'low':
             # Low No sound and does not appear in the status bar but still visible in noti drawer
             app_channel = channel(
-                self._channel_id, name, NotificationManager.IMPORTANCE_MIN
+                self._channel_id, name, NotificationManager.IMPORTANCE_MIN, NotificationManager.VISIBILITY_PUBLIC
             )
         else:
             app_channel = channel(
@@ -139,14 +139,14 @@ class AndroidNotification(Notification):
             )
             notification.setLargeIcon(bitmap_icon)
 
-    def _build_notification(self, title, importance):
+    def _build_notification(self, title, importance, visibility):
         '''
         .. versionadded:: 1.4.0
         '''
         if SDK_INT < 26:
             noti = NotificationBuilder(activity)
         else:
-            self._channel = self._build_notification_channel(title, importance)
+            self._channel = self._build_notification_channel(title, importance, visibility)
             noti = NotificationBuilder(activity, self._channel_id)
         return noti
 
@@ -199,14 +199,13 @@ class AndroidNotification(Notification):
                 return
             else:
                 importance = kwargs.get('importance')
-                noti = self._build_notification(title, importance)
+                visibility = kwargs.get('visibility')
+                noti = self._build_notification(title, importance, visibility)
 
             # set basic properties for notification
             noti.setContentTitle(title)
             noti.setContentText(AndroidString(message))
             noti.setTicker(AndroidString(ticker))
-            if kwargs.get('visibility'):
-                noti.setVisibility(noti.VISIBILITY_PUBLIC)
 
             # TODO add setFullScreenIntent
             if kwargs.get('only_alert_once'):
